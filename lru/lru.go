@@ -17,6 +17,8 @@ type LRU struct {
 	capacity  int
 	evictList *list.List
 	items     map[interface{}]*list.Element
+	misses    int
+	hits      int
 }
 
 // payload contains the value evictList hold
@@ -35,6 +37,13 @@ func NewLRUCache(size int) *LRU {
 		evictList: list.New(),
 		items:     make(map[interface{}]*list.Element),
 	}
+}
+
+// return the LRU running information
+func (l *LRU) Info() (hits int, misses int, maxSize int, currentSize int) {
+	l.lock.RLock()
+	defer l.lock.RUnlock()
+	return l.hits, l.misses, l.capacity, l.Len()
 }
 
 // return the LRU max capacity
@@ -73,6 +82,9 @@ func (l *LRU) Get(key interface{}) (value interface{}, ok bool) {
 	v, ok := l.items[key]
 	if ok {
 		l.evictList.MoveToFront(v)
+		l.hits += 1
+	} else {
+		l.misses += 1
 	}
 	return v, ok
 }
@@ -101,9 +113,11 @@ func (l *LRU) GetOrSet(key, value interface{}) (newValue interface{}, isGet bool
 	l.lock.Lock()
 	defer l.lock.Unlock()
 	if v, ok := l.Get(key); ok {
+		l.hits += 1
 		return v, ok
 	}
 	l.Set(key, value)
+	l.misses += 1
 	return value, false
 }
 
