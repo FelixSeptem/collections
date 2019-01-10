@@ -5,7 +5,12 @@
 [![GoDoc](http://godoc.org/github.com/FelixSeptem/collections?status.svg)](http://godoc.org/github.com/FelixSeptem/collections)
 
 some useful datatypes inspired by [collections](https://docs.python.org/2/library/collections.html) and [boltons](https://github.com/mahmoud/boltons)
-### Install
+## Install
 ```shell
 go get -u github.com/FelixSeptem/collections
 ```
+
+### Cache
+- LRU implement a thread safe `Least Recently Used` [ref](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) [Code](https://github.com/FelixSeptem/collections/tree/master/lru)
+- LFU implement a thread safe `Least Frequently Used` [ref](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least-frequently_used_(LFU)) [Code](https://github.com/FelixSeptem/collections/tree/master/lfu)
+- ARC implement a thread safe `Adaptive Replacement Cache` [ref](https://en.wikipedia.org/wiki/Adaptive_replacement_cache) Paper:[[1]](https://www.usenix.org/legacy/events/fast03/tech/full_papers/megiddo/megiddo.pdf)[[2]](https://arxiv.org/pdf/1503.07624.pdf) [Code]()
