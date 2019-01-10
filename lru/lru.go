@@ -108,6 +108,18 @@ func (l *LRU) Remove(key interface{}) bool {
 	return ok
 }
 
+// Remove and return the oldest item from LRU
+func (l *LRU) PopOldest() (key, value interface{}) {
+	l.lock.Lock()
+	defer l.lock.Unlock()
+	if l.evictList.Len() == 0 {
+		return nil, nil
+	}
+	v := l.evictList.Back()
+	l.removeItem(l.evictList.Back())
+	return v.Value.(*payload).key, v.Value.(*payload).value
+}
+
 // return the value if the key exist, otherwise update the key by given value similar with redis SETNX
 func (l *LRU) GetOrSet(key, value interface{}) (newValue interface{}, isGet bool) {
 	l.lock.Lock()
