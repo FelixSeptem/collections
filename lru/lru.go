@@ -62,7 +62,7 @@ func (l *LRU) Set(key, value interface{}) (evicted bool) {
 		return false
 	}
 
-	v := payload{
+	v := &payload{
 		key:   key,
 		value: value,
 	}
@@ -85,6 +85,7 @@ func (l *LRU) Get(key interface{}) (value interface{}, ok bool) {
 		l.hits += 1
 	} else {
 		l.misses += 1
+		return nil, ok
 	}
 	return v.Value.(*payload).value, ok
 }
@@ -123,12 +124,8 @@ func (l *LRU) PopOldest() (key, value interface{}) {
 
 // return the value if the key exist, otherwise update the key by given value similar with redis SETNX
 func (l *LRU) GetOrSet(key, value interface{}) (newValue interface{}, isGet bool) {
-	l.lock.Lock()
-	defer l.lock.Unlock()
-	if v, ok := l.items[key]; ok {
-		l.hits += 1
-		l.evictList.MoveToFront(v)
-		return v.Value.(*payload).value, ok
+	if v, ok := l.Get(key); ok {
+		return v, ok
 	}
 	l.Set(key, value)
 	l.misses += 1
@@ -161,6 +158,8 @@ func (l *LRU) Purge() {
 		delete(l.items, k)
 	}
 	l.evictList.Init()
+	l.misses = 0
+	l.hits = 0
 }
 
 // remove item from lru

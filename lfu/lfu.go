@@ -29,7 +29,7 @@ type payload struct {
 }
 
 // NewLFUCache return a given size LFU
-func (l *LFU) NewLFUCache(size int) *LFU {
+func NewLFUCache(size int) *LFU {
 	if size <= 0 {
 		size = Default_LFU_Size
 	}
@@ -63,7 +63,7 @@ func (l *LFU) Set(key, value interface{}) (evicted bool) {
 		l.adjust(v)
 		return false
 	}
-	v := payload{
+	v := &payload{
 		key:   key,
 		value: value,
 	}
@@ -88,6 +88,7 @@ func (l *LFU) Get(key interface{}) (value interface{}, ok bool) {
 		l.hits += 1
 	} else {
 		l.misses += 1
+		return nil, ok
 	}
 	return v.Value.(*payload).value, ok
 }
@@ -115,7 +116,7 @@ func (l *LFU) Remove(key interface{}) bool {
 func (l *LFU) PopOldest() (key, value interface{}) {
 	l.lock.Lock()
 	defer l.lock.Unlock()
-	if l.Len() == 0 {
+	if l.evictList.Len() == 0 {
 		return nil, nil
 	}
 	v := l.evictList.Back()
@@ -126,13 +127,8 @@ func (l *LFU) PopOldest() (key, value interface{}) {
 
 // return the value if the key exist, otherwise update the key by given value similar with redis SETNX
 func (l *LFU) GetOrSet(key, value interface{}) (newValue interface{}, isGet bool) {
-	l.lock.Lock()
-	defer l.lock.Unlock()
-	if v, ok := l.items[key]; ok {
-		v.Value.(*payload).frequency += 1
-		l.adjust(v)
-		l.hits += 1
-		return v.Value.(*payload).value, ok
+	if v, ok := l.Get(key); ok {
+		return v, ok
 	}
 	l.Set(key, value)
 	l.misses += 1
@@ -169,16 +165,18 @@ func (l *LFU) Purge() {
 
 // adjust the list element to correct location
 func (l *LFU) adjust(i *list.Element) *list.Element {
-	l.lock.Lock()
-	defer l.lock.Unlock()
-	if i.Prev() == nil {
-		return i
+	tmp := new(list.Element)
+	for n := i; i.Value.(*payload).frequency >= n.Value.(*payload).frequency; n = n.Prev() {
+		if n.Prev() == nil {
+			l.evictList.Remove(i)
+			res := l.evictList.PushFront(i.Value)
+			return res
+		}
+		tmp = n
 	}
-	for n := i.Prev(); i.Value.(*payload).frequency >= n.Value.(*payload).frequency && n.Prev() != nil; n = n.Prev() {
-		l.evictList.Remove(i)
-		i = l.evictList.InsertBefore(i.Value, n)
-	}
-	return i
+	v := l.evictList.Remove(i)
+	res := l.evictList.InsertBefore(v, tmp)
+	return res
 }
 
 // remove item from lru
