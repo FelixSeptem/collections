@@ -16,8 +16,8 @@ func TestQueue_GetHead(t *testing.T) {
 	}
 	q.Push(1)
 	q.Push(2)
-	if i := q.GetTop(); i != 1 {
-		t.Errorf("expect 1,got %d", i)
+	if i := q.GetTop(); i != 2 {
+		t.Errorf("expect 2,got %d", i)
 	}
 }
 
@@ -28,7 +28,7 @@ func TestQueue_GetTail(t *testing.T) {
 	}
 	q.Push(1)
 	q.Push(2)
-	if i := q.GetBottom(); i != 2 {
+	if i := q.GetBottom(); i != 1 {
 		t.Errorf("expect 1,got %d", i)
 	}
 }
@@ -70,8 +70,8 @@ func TestQueue_Len(t *testing.T) {
 
 func TestQueue_Push(t *testing.T) {
 	q := NewStack(32)
-	if e := q.Push(1); e {
-		t.Errorf("expect false,got %v", e)
+	if e := q.Push(1); !e {
+		t.Errorf("expect true,got %v", e)
 	}
 }
 
@@ -83,8 +83,8 @@ func TestQueue_Pop(t *testing.T) {
 	}
 	q.Push(2)
 	q.Push(3)
-	if v := q.Pop(); v != 2 {
-		t.Errorf("expect 2,got %d", v)
+	if v := q.Pop(); v != 3 {
+		t.Errorf("expect 3,got %d", v)
 	}
 }
 

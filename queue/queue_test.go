@@ -29,7 +29,7 @@ func TestQueue_GetTail(t *testing.T) {
 	q.Push(1)
 	q.Push(2)
 	if i := q.GetTail(); i != 2 {
-		t.Errorf("expect 1,got %d", i)
+		t.Errorf("expect 2,got %d", i)
 	}
 }
 
