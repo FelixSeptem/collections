@@ -47,6 +47,8 @@ script:
   - cd ./lru && go test -run none -bench . -benchtime 1s -benchmem
   - cd ./../lfu && go test -run none -bench . -benchtime 1s -benchmem
   - cd ./../arc && go test -run none -bench . -benchtime 1s -benchmem
+  - cd ./../queue && go test -run none -bench . -benchtime 1s -benchmem
+  - cd ./../stack && go test -run none -bench . -benchtime 1s -benchmem
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

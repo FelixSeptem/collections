@@ -17,7 +17,7 @@ type Queue struct {
 	items    *list.List
 }
 
-// NewARC return a given size arc
+// NewQueue return a given size queue
 func NewQueue(size int) *Queue {
 	if size <= 0 {
 		size = Default_Queue_Size
