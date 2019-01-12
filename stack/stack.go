@@ -23,8 +23,8 @@ func NewStack(size int) *Stack {
 		size = Default_Stack_Size
 	}
 	return &Stack{
-		capacity:size,
-		items:list.New(),
+		capacity: size,
+		items:    list.New(),
 	}
 }
 
@@ -32,7 +32,7 @@ func NewStack(size int) *Stack {
 func (s *Stack) Push(item interface{}) (isSuccess bool) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
-	if s.items.Len()==s.capacity{
+	if s.items.Len() == s.capacity {
 		return false
 	}
 	s.items.PushFront(item)
