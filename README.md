@@ -10,7 +10,13 @@ go get -u github.com/FelixSeptem/collections
 ```
 
 ### Data Structures
-- 
+- queue [![GoDoc](http://godoc.org/github.com/FelixSeptem/collections/queue?status.svg)](http://godoc.org/github.com/FelixSeptem/collections/queue)
+implement a thread safe FILO queue
+- stack [![GoDoc](http://godoc.org/github.com/FelixSeptem/collections/stack?status.svg)](http://godoc.org/github.com/FelixSeptem/collections/stack)
+implement a thread safe FIFO stack
+- deque [![GoDoc](http://godoc.org/github.com/FelixSeptem/collections/deque?status.svg)](http://godoc.org/github.com/FelixSeptem/collections/deque)
+deques are a generalization of stacks and queues ,inspired by [deque](https://docs.python.org/2/library/collections.html#collections.deque)
+- priority queue [![GoDoc](http://godoc.org/github.com/FelixSeptem/collections/priority_queue?status.svg)](http://godoc.org/github.com/FelixSeptem/collections/priority_queue) implement a fix size queue with weight
 
 ### Cache
 - LRU [![GoDoc](http://godoc.org/github.com/FelixSeptem/collections/lru?status.svg)](http://godoc.org/github.com/FelixSeptem/collections/lru)
@@ -18,6 +24,6 @@ implement a thread safe `Least Recently Used` [ref](https://en.wikipedia.org/wik
 - LFU [![GoDoc](http://godoc.org/github.com/FelixSeptem/collections/lfu?status.svg)](http://godoc.org/github.com/FelixSeptem/collections/lfu)
 implement a thread safe `Least Frequently Used` [ref](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least-frequently_used_(LFU)) [Code](https://github.com/FelixSeptem/collections/tree/master/lfu)
 - ARC [![GoDoc](http://godoc.org/github.com/FelixSeptem/collections/arc?status.svg)](http://godoc.org/github.com/FelixSeptem/collections/arc)
-implement a thread safe `Adaptive Replacement Cache` [ref](https://en.wikipedia.org/wiki/Adaptive_replacement_cache) Paper:[[1]](https://www.usenix.org/legacy/events/fast03/tech/full_papers/megiddo/megiddo.pdf)[[2]](https://arxiv.org/pdf/1503.07624.pdf) [Code]()
+implement a thread safe `Adaptive Replacement Cache` [ref](https://en.wikipedia.org/wiki/Adaptive_replacement_cache) Paper:[[1]](https://www.usenix.org/legacy/events/fast03/tech/full_papers/megiddo/megiddo.pdf)[[2]](https://arxiv.org/pdf/1503.07624.pdf) [Code](https://github.com/FelixSeptem/collections/tree/master/arc)
 
 ### Others

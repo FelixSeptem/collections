@@ -1,4 +1,4 @@
-// Package arc implement Adaptive Replacement Cache
+// Package arc implement Adaptive Replacement Cache inspired by http://code.activestate.com/recipes/576532/
 package arc
 
 import (
