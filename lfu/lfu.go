@@ -165,18 +165,21 @@ func (l *LFU) Purge() {
 
 // adjust the list element to correct location
 func (l *LFU) adjust(i *list.Element) *list.Element {
-	tmp := new(list.Element)
-	for n := i; i.Value.(*payload).frequency >= n.Value.(*payload).frequency; n = n.Prev() {
-		if n.Prev() == nil {
-			l.evictList.Remove(i)
-			res := l.evictList.PushFront(i.Value)
-			return res
-		}
-		tmp = n
+	if i.Prev() == nil {
+		return i
 	}
-	v := l.evictList.Remove(i)
-	res := l.evictList.InsertBefore(v, tmp)
-	return res
+	if i.Value.(*payload).frequency >= l.evictList.Front().Value.(*payload).frequency {
+		l.evictList.MoveBefore(i, l.evictList.Front())
+		return i
+	}
+	for n := i; n != nil; n = n.Prev() {
+		if i.Value.(*payload).frequency < n.Value.(*payload).frequency {
+			l.evictList.MoveAfter(i, n)
+			return i
+		}
+	}
+	l.evictList.MoveBefore(i, l.evictList.Front())
+	return nil
 }
 
 // remove item from lru

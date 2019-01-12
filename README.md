@@ -9,6 +9,9 @@ some useful datatypes inspired by [collections](https://docs.python.org/2/librar
 go get -u github.com/FelixSeptem/collections
 ```
 
+### Data Structures
+- 
+
 ### Cache
 - LRU [![GoDoc](http://godoc.org/github.com/FelixSeptem/collections/lru?status.svg)](http://godoc.org/github.com/FelixSeptem/collections/lru)
 implement a thread safe `Least Recently Used` [ref](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) [Code](https://github.com/FelixSeptem/collections/tree/master/lru)

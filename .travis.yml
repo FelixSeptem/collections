@@ -46,6 +46,7 @@ script:
   - go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...  # Run all the tests with the race detector enabled
   - cd ./lru && go test -run none -bench . -benchtime 1s -benchmem
   - cd ./../lfu && go test -run none -bench . -benchtime 1s -benchmem
+  - cd ./../arc && go test -run none -bench . -benchtime 1s -benchmem
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
