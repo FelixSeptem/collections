@@ -46,25 +46,28 @@ func (a *ARC) Cap() int {
 }
 
 // Add a new item into arc
-func (a *ARC) Set(key, value interface{}) {
+func (a *ARC) Set(key, value interface{}) bool {
 	a.lock.Lock()
 	defer a.lock.Unlock()
 
 	if a.t1.Contains(key) {
 		a.t1.Remove(key)
 		a.t2.Set(key, value)
-		return
+		return false
 	}
 
 	if a.t2.Contains(key) {
 		a.t2.Set(key, value)
-		return
+		return false
 	}
 
+	var evicted bool
 	if a.b1.Contains(key) {
-		delta := 1
-		l1 := a.b1.Len()
-		l2 := a.b2.Len()
+		var (
+			delta = 1
+			l1    = a.b1.Len()
+			l2    = a.b2.Len()
+		)
 		if l2 > l1 {
 			delta = l2 / l1
 		}
@@ -76,16 +79,19 @@ func (a *ARC) Set(key, value interface{}) {
 
 		if a.t1.Len()+a.t2.Len() > a.capacity {
 			a.adaptEvict(false)
+			evicted = true
 		}
 		a.b1.Remove(key)
 		a.t2.Set(key, value)
-		return
+		return evicted
 	}
 
 	if a.b2.Contains(key) {
-		delta := 1
-		l1 := a.b1.Len()
-		l2 := a.b2.Len()
+		var (
+			delta = 1
+			l1    = a.b1.Len()
+			l2    = a.b2.Len()
+		)
 		if l1 > l2 {
 			delta = l1 / l2
 		}
@@ -97,23 +103,28 @@ func (a *ARC) Set(key, value interface{}) {
 
 		if a.t1.Len()+a.t2.Len() > a.capacity {
 			a.adaptEvict(true)
+			evicted = true
 		}
 		a.b2.Remove(key)
 		a.t2.Set(key, value)
-		return
+		return evicted
 	}
 
 	if a.t1.Len()+a.t2.Len() > a.capacity {
 		a.adaptEvict(false)
+		evicted = true
 	}
 	if a.b1.Len() > a.capacity-a.p {
 		a.b1.PopOldest()
+		evicted = true
 	}
 	if a.b2.Len() > a.p {
 		a.b2.PopOldest()
+		evicted = true
 	}
 
 	a.t1.Set(key, value)
+	return evicted
 }
 
 // Get return the given key's value
